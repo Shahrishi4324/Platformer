@@ -11,7 +11,7 @@ FPS = 60
 
 # Setup the display
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("2D Platformer - Step 1")
+pygame.display.set_caption("2D Platformer - Step 2")
 
 # Player settings
 player_size = 50
@@ -22,6 +22,14 @@ player_vel_x = 5
 player_vel_y = 0
 player_jump = False
 gravity = 0.5
+
+# Platform settings
+platform_color = (0, 255, 0)
+platforms = [
+    pygame.Rect(200, 500, 400, 20),
+    pygame.Rect(100, 350, 200, 20),
+    pygame.Rect(500, 200, 300, 20)
+]
 
 # Game loop
 clock = pygame.time.Clock()
@@ -46,6 +54,14 @@ while True:
     player_vel_y += gravity
     player_y += player_vel_y
 
+    # Platform collision
+    player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
+    for platform in platforms:
+        if player_rect.colliderect(platform) and player_vel_y > 0:
+            player_y = platform.y - player_size
+            player_vel_y = 0
+            player_jump = False
+
     # Ground collision
     if player_y >= HEIGHT - player_size:
         player_y = HEIGHT - player_size
@@ -53,7 +69,9 @@ while True:
 
     # Drawing
     screen.fill(WHITE)
-    pygame.draw.rect(screen, player_color, (player_x, player_y, player_size, player_size))
+    pygame.draw.rect(screen, player_color, player_rect)
+    for platform in platforms:
+        pygame.draw.rect(screen, platform_color, platform)
 
     # Update display
     pygame.display.flip()
