@@ -11,7 +11,7 @@ FPS = 60
 
 # Setup the display
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("2D Platformer - Step 2")
+pygame.display.set_caption("2D Platformer - Step 3")
 
 # Player settings
 player_size = 50
@@ -29,6 +29,14 @@ platforms = [
     pygame.Rect(200, 500, 400, 20),
     pygame.Rect(100, 350, 200, 20),
     pygame.Rect(500, 200, 300, 20)
+]
+
+# Enemy settings
+enemy_size = 50
+enemy_color = (255, 0, 0)
+enemies = [
+    {'rect': pygame.Rect(200, 450, enemy_size, enemy_size), 'dir': 1},
+    {'rect': pygame.Rect(100, 300, enemy_size, enemy_size), 'dir': -1},
 ]
 
 # Game loop
@@ -67,11 +75,24 @@ while True:
         player_y = HEIGHT - player_size
         player_jump = False
 
+    # Enemy movement and collision
+    for enemy in enemies:
+        enemy['rect'].x += 3 * enemy['dir']
+        if enemy['rect'].left < 0 or enemy['rect'].right > WIDTH:
+            enemy['dir'] *= -1
+
+        if player_rect.colliderect(enemy['rect']):
+            print("Player hit! Game Over!")
+            pygame.quit()
+            sys.exit()
+
     # Drawing
     screen.fill(WHITE)
     pygame.draw.rect(screen, player_color, player_rect)
     for platform in platforms:
         pygame.draw.rect(screen, platform_color, platform)
+    for enemy in enemies:
+        pygame.draw.rect(screen, enemy_color, enemy['rect'])
 
     # Update display
     pygame.display.flip()
