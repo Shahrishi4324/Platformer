@@ -21,3 +21,5 @@ Ensure you have the following installed:
 3. Run the game:
    ```bash
    python platformer_game.py ```
+
+![image](https://github.com/user-attachments/assets/41eab2f2-3fd9-4dcf-aea2-79f1fc15080f)
